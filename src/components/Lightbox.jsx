@@ -25,22 +25,41 @@ function toEmbedUrl(url) {
 }
 
 /**
- * Cinematic full-screen video lightbox with prev/next navigation between
- * a list of items, matching the reference site's player UI.
+ * Cinematic full-screen lightbox. Supports two calling styles:
  *
- * Props:
- * - items: array of { title, videoFile?, url?, image?, meta? }
- * - index: currently active index into items
- * - onClose, onPrev, onNext: navigation handlers
+ * 1. Carousel mode (Films, Reels) — pass a list with prev/next nav:
+ *    <Lightbox open items={films} index={i} onClose={..} onPrev={..} onNext={..} />
+ *
+ * 2. Single-item mode (Photography images, or any one-off) — pass the
+ *    item directly, no list needed:
+ *    <Lightbox open title="..." image="..." onClose={..} />
+ *    <Lightbox open title="..." videoFile="..." onClose={..} />
+ *    <Lightbox open title="..." videoUrl="..." onClose={..} />
  */
-export default function Lightbox({ open, items = [], index = 0, onClose, onPrev, onNext }) {
+export default function Lightbox({
+  open,
+  onClose,
+  onPrev,
+  onNext,
+  items,
+  index = 0,
+  // legacy single-item props:
+  title,
+  image,
+  videoFile,
+  videoUrl,
+}) {
   const frameRef = useRef(null)
-  const item = items[index]
+
+  const usingList = Array.isArray(items) && items.length > 0
+  const list = usingList ? items : [{ title, image, videoFile, url: videoUrl }]
+  const activeIndex = usingList ? index : 0
+  const item = list[activeIndex]
 
   useEffect(() => {
     if (!open) return
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') onClose?.()
       if (e.key === 'ArrowLeft') onPrev?.()
       if (e.key === 'ArrowRight') onNext?.()
     }
@@ -55,6 +74,7 @@ export default function Lightbox({ open, items = [], index = 0, onClose, onPrev,
   if (!open || !item) return null
 
   const embedUrl = item.videoFile ? null : toEmbedUrl(item.url)
+  const showNav = usingList && list.length > 1 && onPrev && onNext
 
   const handleExpand = () => {
     const el = frameRef.current
@@ -73,12 +93,8 @@ export default function Lightbox({ open, items = [], index = 0, onClose, onPrev,
       </button>
       <button className="cine-close" onClick={onClose} aria-label="Close">✕</button>
 
-      {items.length > 1 && (
-        <button
-          className="cine-nav cine-prev"
-          onClick={(e) => { e.stopPropagation(); onPrev?.() }}
-          aria-label="Previous"
-        >
+      {showNav && (
+        <button className="cine-nav cine-prev" onClick={(e) => { e.stopPropagation(); onPrev() }} aria-label="Previous">
           ‹
         </button>
       )}
@@ -109,25 +125,27 @@ export default function Lightbox({ open, items = [], index = 0, onClose, onPrev,
             </div>
           )}
 
-          {!item.videoFile && !item.url && (
+          {!item.videoFile && !item.url && item.image && (
+            <img className="cine-video" src={item.image} alt={item.title || ''} style={{ objectFit: 'contain' }} />
+          )}
+
+          {!item.videoFile && !item.url && !item.image && (
             <div className="cine-fallback">
               <p>The video for this project isn't hosted online yet.</p>
             </div>
           )}
         </div>
 
-        <div className="cine-caption">
-          <p className="cine-title">{item.title}</p>
-          {item.meta && <p className="cine-meta">{item.meta}</p>}
-        </div>
+        {item.title && (
+          <div className="cine-caption">
+            <p className="cine-title">{item.title}</p>
+            {item.meta && <p className="cine-meta">{item.meta}</p>}
+          </div>
+        )}
       </div>
 
-      {items.length > 1 && (
-        <button
-          className="cine-nav cine-next"
-          onClick={(e) => { e.stopPropagation(); onNext?.() }}
-          aria-label="Next"
-        >
+      {showNav && (
+        <button className="cine-nav cine-next" onClick={(e) => { e.stopPropagation(); onNext() }} aria-label="Next">
           ›
         </button>
       )}

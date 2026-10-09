@@ -35,7 +35,7 @@ export default function Shop() {
           <h1 style={{ fontSize: 'clamp(44px, 7vw, 84px)' }}>Prints &amp; presets.</h1>
           <p className="hero-sub">
             Portrait prints from personal and client work, and the editing presets used across
-            recent projects. Message on WhatsApp to order — payment by M-Pesa or bank transfer,
+            recent projects. Message on WhatsApp to order  payment by M-Pesa or bank transfer,
             details shared once you reach out.
           </p>
         </div>

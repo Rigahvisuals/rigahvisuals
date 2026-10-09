@@ -43,7 +43,6 @@ export const categories = [
   { id: 'events', label: 'Events', description: 'Professional coverage for conferences, launches, graduations, and celebrations.' },
   { id: 'real-estate', label: 'Real Estate', description: 'Showcasing properties through stunning photography and cinematic tours.' },
   { id: 'automotive', label: 'Automotive', description: 'Creative photography and video content for car enthusiasts, dealerships, and brands.' },
-  
 ]
 
 export const whyChooseUs = [
@@ -86,16 +85,34 @@ export const photography = [
   { id: 'automotive-sample', title: 'Automotive', category: 'automotive', meta: 'Automotive', image: '/images/photo-automotive-sample.jpg' },
 ]
 
-export const photoCategories = ['weddings', 'corporate', 'events', 'automotive','real-estate']
+export const photoCategories = ['weddings', 'corporate', 'events', 'automotive', 'Real-Estate']
+
+// Short-form vertical clips for the Films page "Reels" section — styled
+// like YouTube Shorts/Instagram Reels (tall 9:16 tiles).
+// PLACEHOLDER: reusing existing images as stand-in covers — swap `image`
+// for a real vertical thumbnail and fill in `url` or `videoFile` for each.
+// `date` controls the order they're shown in (newest first) — use any
+// format JavaScript's Date can parse, e.g. '2025-11-20'.
+export const reels = [
+  { id: 'reel-1', title: 'Bambino', image: '/images/film-bambino-kitchen.jpg', url: '', videoFile: '/videos/Food.mp4', date: '2025-03-10' },
+  { id: 'reel-2', title: 'Restraunt Foodie', image: '/images/photo-bambino.jpg', url: '', videoFile: '/videos/Foodie.mp4', date: '2025-06-02' },
+  { id: 'reel-3', title: 'Cinematics', image: '/images/photo-portrait-2.jpg', url: '', videoFile: 'videos/Ivy.mp4', date: '2025-09-18' },
+  { id: 'reel-4', title: 'The Maangis', image: '/images/film-maangis.jpg', url: '', videoFile: 'videos/Maangi.mp4', date: '2025-11-05' },
+  { id: 'reel-5', title: 'LC 300 GR SPORT X LEXUS 570', image: '/images/photo-automotive-sample.jpg', url: '', videoFile: 'videos/LC 300 GR SPORT X LEXUS 570.mp4', date: '2025-11-05' },
+  { id: 'reel-6', title: 'Before & After', image: '/images/house.jpg', url: '', videoFile: 'videos/Before and after.mp4', date: '2025-11-05' },
+
+]
 
 // Video projects from "Single Projects" in the deck.
 export const filmSpotlightId = 'burning-spear'
 
 export const films = [
-  { id: 'wedding', title: 'Wedding', meta: 'wedding', image: '/images/film-burning-spear.jpg', url: '', videoFile: '/videos/wedding.mp4' },
-  { id: 'bambino-kitchen', title: 'Bambino Kitchen Westlands', meta: 'Brand film', image: '/images/film-bambino-kitchen.jpg', url: '', videoFile: '/videos/wedding.mp4' },
-  { id: 'stand-music', title: 'Stand Music Zimbabwe', meta: 'Live performance', image: '/images/film-stand-music.jpg', url: '', videoFile: '/videos/wedding.mp4' },
-  { id: 'maangis', title: 'The Maangis Content Creation', meta: 'Content creation', image: '/images/film-maangis.jpg', url: '', videoFile: '/videos/wedding.mp4' },
+  { id: 'porsche-cayenne-2020-coupe', title: 'Porsche Cayenne 2020 Coupe', meta: 'Automotive film', image: '/images/porsche.jpg', url: '', videoFile: '/videos/Automotive.mp4' },
+  { id: 'subaru-impreza-g4', title: 'Subaru Impreza G4', meta: 'Atomotive film', image: '/images/subaru.jpg', url: '', videoFile: '/videos/Subaru.mp4' },
+  { id: 'bambino-kitchen', title: 'Bambino Kitchen Westlands', meta: 'Brand film', image: '/images/film-bambino-kitchen.jpg', url: '', videoFile: '/videos/Food.mp4' },
+  { id: 'joy-&-kelvin', title: 'Joy & Kelvin', meta: 'Wedding', image: '/images/joy x kelvin.jpg', url: '', videoFile: '/videos/wedding.mp4' },
+  { id: 'phoebe-&-marvin', title: 'Phoebe & Marvin', meta: 'Wedding', image: '/images/phoebe.jpg', url: '', videoFile: '/videos/Phoebe.mp4' },
+  { id: 'maangis', title: 'The Maangis ', meta: 'Content creation', image: '/images/film-maangis.jpg', url: '', videoFile: '/videos/Maangi.mp4' },
 ]
 
 // Real clients/collaborators named in the portfolio deck — shown as a
@@ -145,7 +162,7 @@ export const team = [
 // Shown in the "Selected work" reel on the home page — a mix of real
 // photo and film projects.
 export const featuredWork = [
-  { id: 'wedding', title: 'Wedding', type: 'film', meta: 'Film', image: '/images/film-burning-spear.jpg', href: '/films' },
+  { id: 'burning-spear-feat', title: 'Burning Spear', type: 'film', meta: 'Film', image: '/images/film-burning-spear.jpg', href: '/films' },
   { id: 'gabs-feat', title: 'GABS', type: 'photo', meta: 'Corporate · 2024', image: '/images/photo-gabs.jpg', href: '/photography' },
   { id: 'stand-music-feat', title: 'Stand Music Zimbabwe', type: 'film', meta: 'Film', image: '/images/film-stand-music.jpg', href: '/films' },
   { id: 'shofar-feat', title: 'Shofar @ 10', type: 'photo', meta: 'Events · 2024', image: '/images/photo-shofar.jpg', href: '/photography' },
@@ -162,7 +179,7 @@ export const testimonials = [
 ]
 
 export const contactChecklist = [
-  { item: 'Project type — photo, film, or both', note: 'Helps scope the quote' },
+  { item: 'Project type : photo, film, or both', note: 'Helps scope the quote' },
   { item: 'Rough dates and location', note: 'Confirms availability' },
   { item: 'Budget range, if you have one', note: 'Speeds up the proposal' },
   { item: 'Any reference work you like', note: 'Helps align on style' },

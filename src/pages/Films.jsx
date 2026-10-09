@@ -1,16 +1,23 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Lightbox from '../components/Lightbox'
-import { films, deliverables, testimonials } from '../data/content'
+import { films, reels, deliverables, testimonials } from '../data/content'
 import Marquee from '../components/Marquee'
 
 export default function Films() {
-  const [activeIndex, setActiveIndex] = useState(null)
+  const [active, setActive] = useState(null)
 
-  const openAt = (i) => setActiveIndex(i)
-  const close = () => setActiveIndex(null)
-  const prev = () => setActiveIndex((i) => (i - 1 + films.length) % films.length)
-  const next = () => setActiveIndex((i) => (i + 1) % films.length)
+  // Newest first
+  const sortedReels = [...reels].sort((a, b) => new Date(b.date) - new Date(a.date))
+  // Doubled so the auto-scroll strip can loop seamlessly at -50%
+  const reelStrip = [...sortedReels, ...sortedReels]
+
+  const [activeReelIndex, setActiveReelIndex] = useState(null)
+  const openReelAt = (i) => setActiveReelIndex(i)
+  const closeReel = () => setActiveReelIndex(null)
+  const prevReel = () =>
+    setActiveReelIndex((i) => (i - 1 + sortedReels.length) % sortedReels.length)
+  const nextReel = () => setActiveReelIndex((i) => (i + 1) % sortedReels.length)
 
   return (
     <>
@@ -19,11 +26,10 @@ export default function Films() {
           <p className="hero-eyebrow">Films</p>
           <h1 style={{ fontSize: 'clamp(44px, 7vw, 84px)' }}>Motion with a reason to move.</h1>
           <p className="hero-sub">
-            Real projects. Click any film below to watch right here.
+            Real projects — click any film below to watch right here.
           </p>
         </div>
       </header>
-
       <Marquee />
 
       {/* One full block per film: tag, title, big video — mirrors the
@@ -35,21 +41,62 @@ export default function Films() {
             <p className="film-tag">FILM // {String(i + 1).padStart(2, '0')}</p>
             <h2>{film.title}</h2>
 
-            <button type="button" className="film-media" onClick={() => openAt(i)}>
-              <img src={film.image} alt={film.title} loading="lazy" />
-              <div className="play">
-                <div className="play-icon">▶</div>
-              </div>
-            </button>
+            {film.openExternally && film.url ? (
+              <a className="film-media" href={film.url} target="_blank" rel="noopener noreferrer">
+                <img src={film.image} alt={film.title} loading="lazy" />
+                <div className="play">
+                  <div className="play-icon">▶</div>
+                </div>
+              </a>
+            ) : (
+              <button type="button" className="film-media" onClick={() => setActive(film)}>
+                <img src={film.image} alt={film.title} loading="lazy" />
+                <div className="play">
+                  <div className="play-icon">▶</div>
+                </div>
+              </button>
+            )}
 
             <div className="film-meta-row">
               <span>{film.meta}</span>
-              <span>{film.videoFile || film.url ? 'Click to play' : 'Video coming soon'}</span>
+              <span>
+                {film.videoFile || film.url
+                  ? film.openExternally
+                    ? 'Opens on YouTube/Vimeo ↗'
+                    : 'Click to play'
+                  : 'Video coming soon'}
+              </span>
             </div>
             {film.description && <p className="film-description">{film.description}</p>}
           </div>
         </section>
       ))}
+
+      {sortedReels.length > 0 && (
+        <section>
+          <div className="wrap">
+            <div className="section-head reveal">
+              <h2>Reels</h2>
+              <p> click to watch.</p>
+            </div>
+          </div>
+          <div className="reels-viewport">
+            <div className="reels-track">
+              {reelStrip.map((reel, i) => (
+                <button
+                  type="button"
+                  className="reel-tile"
+                  key={`${reel.id}-${i}`}
+                  onClick={() => openReelAt(i % sortedReels.length)}
+                >
+                  <img src={reel.image} alt={reel.title} loading="lazy" />
+                  <p className="reel-tile-title">{reel.title}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section>
         <div className="wrap">
@@ -60,7 +107,7 @@ export default function Films() {
           <div className="capability-grid reveal-stagger">
             {deliverables.map((d) => (
               <div className="capability" key={d.label}>
-                <span className="capability-icon">✓</span>
+                <span className="capability-icon">◆</span>
                 <h3>{d.label}</h3>
                 <p>{d.detail}</p>
               </div>
@@ -73,7 +120,7 @@ export default function Films() {
         <div className="wrap">
           <div className="section-head reveal">
             <h2>What clients say</h2>
-            <p>Feedback from our clients.</p>
+            <p>Add real feedback from real clients here before publishing.</p>
           </div>
           <div className="testimonial-grid reveal-stagger">
             {testimonials.map((t, i) => (
@@ -102,12 +149,20 @@ export default function Films() {
       </section>
 
       <Lightbox
-        open={activeIndex !== null}
-        items={films}
-        index={activeIndex ?? 0}
-        onClose={close}
-        onPrev={prev}
-        onNext={next}
+        open={!!active}
+        onClose={() => setActive(null)}
+        title={active?.title}
+        videoFile={active?.videoFile}
+        videoUrl={active?.url}
+      />
+
+      <Lightbox
+        open={activeReelIndex !== null}
+        items={sortedReels}
+        index={activeReelIndex ?? 0}
+        onClose={closeReel}
+        onPrev={prevReel}
+        onNext={nextReel}
       />
     </>
   )
